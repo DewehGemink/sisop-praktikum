@@ -1,7 +1,4 @@
-Berikut laporan yang telah diperbaiki agar sinkron dengan screenshot yang Anda kirim:
-
-```markdown
-# Laporan Praktikum Jaringan Komputer - Modul 14
+# Laporan Praktikum Jaringan Komputer - Modul 13
 ## 802.11 WiFi
 
 ### Identitas Praktikan
