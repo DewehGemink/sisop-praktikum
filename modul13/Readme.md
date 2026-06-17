@@ -11,7 +11,7 @@
 ---
 
 ## 1. Tujuan Praktikum
-Berdasarkan modul praktikum Jaringan Komputer Semester Genap 2025/2026, tujuan dari Modul 14 adalah:
+Berdasarkan modul praktikum Jaringan Komputer Semester Genap 2025/2026, tujuan dari Modul 13 adalah:
 1. Mahasiswa dapat menginvestigasi cara kerja protokol WiFi 802.11 menggunakan Wireshark.
 2. Mahasiswa mampu menganalisis struktur frame 802.11 (Beacon, Data, Management).
 3. Mahasiswa memahami mekanisme asosiasi, disosiasi, dan transfer data pada jaringan nirkabel.
@@ -44,7 +44,7 @@ Karena keterbatasan driver NIC wireless dalam mendukung mode monitor untuk captu
 ---
 
 ## 3. Langkah Kerja
-Berikut adalah langkah-langkah yang dilakukan selama praktikum Modul 14:
+Berikut adalah langkah-langkah yang dilakukan selama praktikum Modul 13:
 
 ### 3.1 Persiapan dan Load Trace
 1. Mengunduh file `wireshark-traces.zip` dari `http://gaia.cs.umass.edu/wireshark-labs/`.
