@@ -54,7 +54,7 @@ $ cd xinu/compile
 **Hasil:**
 Direktori kerja berpindah ke `~/xinu/compile`. Folder ini digunakan untuk menjalankan proses kompilasi Xinu.
 
-![Pindah ke Direktori Kompilasi Xinu](assets/dummy.png)
+![Pindah ke Direktori Kompilasi Xinu](assets/01.png)
 
 *Gambar 1: Perpindahan ke direktori kompilasi Xinu menggunakan perintah `cd xinu/compile` pada Development-System VM.*
 
@@ -67,7 +67,7 @@ $ make clean
 **Hasil:**
 Perintah `make clean` membersihkan berkas hasil kompilasi sebelumnya tanpa menghapus *source code* Xinu.
 
-![Membersihkan Hasil Kompilasi Xinu](assets/dummy.png)
+![Membersihkan Hasil Kompilasi Xinu](assets/02.png)
 
 *Gambar 2: Pembersihan hasil kompilasi sebelumnya menggunakan perintah `make clean` pada Development-System VM.*
 
@@ -80,7 +80,7 @@ $ make
 **Hasil:**
 Perintah `make` membangun *image* Xinu bernama `xinu.elf` di dalam direktori `xinu/compile`. Hasil kompilasi juga disalin ke direktori TFTP sebagai `/srv/tftp/xinu.boot` agar dapat diambil oleh Backend VM saat melakukan *booting*.
 
-![Terminal Compile Xinu](assets/dummy.png)
+![Terminal Compile Xinu](assets/03.png)
 
 *Gambar 3: Proses kompilasi source code Xinu menggunakan perintah `make` pada Development-System VM.*
 
@@ -93,7 +93,7 @@ Setelah kompilasi selesai dan Minicom disiapkan sebagaimana dijelaskan pada bagi
 3. GRUB memuat *image* `xinu.boot` yang disediakan oleh TFTP Server.
 4. Xinu dimuat ke memori dan mulai berjalan pada Backend VM. Keberhasilannya diperiksa melalui sambutan Xinu dan prompt `xsh$` di Minicom.
 
-![Booting Backend VM](assets/dummy.png)
+![Booting Backend VM](assets/04.png)
 
 *Gambar 4: Tampilan Backend VM saat melakukan booting melalui jaringan (PXE) dan memuat GRUB.*
 
@@ -112,7 +112,7 @@ Perintah dijalankan menggunakan `sudo` agar Minicom memiliki izin yang diperluka
 **Hasil:**
 Setelah Backend VM menjalankan Xinu, terminal Minicom menampilkan sambutan **Welcome to Xinu!** dan prompt **`xsh$`**. Tampilan tersebut menunjukkan bahwa praktikan sudah dapat berinteraksi dengan *Xinu Shell* melalui koneksi serial.
 
-![Koneksi Minicom](assets/dummy.png)
+![Koneksi Minicom](assets/05.png)
 
 *Gambar 5: Koneksi melalui Minicom yang menampilkan sambutan Xinu dan prompt `xsh$`.*
 
@@ -124,7 +124,7 @@ Melalui prompt `xsh$`, praktikan dapat menjalankan perintah yang disediakan oleh
 xsh$ help
 ```
 
-![Perintah Help Xinu](assets/dummy.png)
+![Perintah Help Xinu](assets/06.png)
 
 *Gambar 6: Hasil perintah `help` yang menampilkan daftar perintah bawaan pada shell Xinu.*
 
