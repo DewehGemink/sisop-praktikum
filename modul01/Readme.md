@@ -83,6 +83,7 @@ xsh$ help
 ```
 
 ![Perintah Help Xinu](assets/dummy.png)
+
 *Gambar 4: Output dari perintah `help` yang menampilkan daftar command bawaan Xinu OS.*
 
 Selain itu, dilakukan eksplorasi direktori menggunakan perintah `ls` dan `cd` untuk melihat struktur sistem file sederhana yang dimiliki oleh Xinu, serta mencoba perintah `halt` atau `shutdown` untuk mematikan sistem.
