@@ -1,5 +1,5 @@
-# Laporan Praktikum Sistem Operasi - Modul 1
-## Running Modul (Rules & Tools Setup)
+# Laporan Praktikum Sistem Operasi
+## Modul 1, 2, dan 3: Instalasi, Arsitektur, dan Eksplorasi Xinu OS
 
 ### Identitas Praktikan
 | Item | Keterangan |
@@ -8,102 +8,100 @@
 | **NIM** | 103072430008 |
 | **Kelas** | IF-04-01 |
 | **Asisten Praktikum** | [Isi Nama Asisten Anda] |
-| **Tanggal Praktikum** | [Isi Tanggal Praktikum, misal: 12 September 2025] |
+| **Tanggal Praktikum** | [Isi Tanggal Praktikum] |
 
 ---
 
 ## 1. Tujuan Praktikum
-Berdasarkan modul praktikum Sistem Operasi Semester Ganjil 2025/2026, tujuan dari Modul 1 adalah:
-1. Praktikan mengetahui aturan, sistem pelaksanaan, sistem penilaian, dan sanksi pelanggaran selama praktikum di Laboratorium Informatika.
-2. Praktikan mengetahui *tools* yang akan digunakan selama 16 pertemuan dan memastikan *tools* tersebut telah terinstal serta berfungsi dengan baik untuk mengurangi kendala teknis.
+1. Memahami aturan, tata tertib, dan persiapan *tools* utama praktikum Sistem Operasi (VirtualBox, Ubuntu, Xinu OS, dan Sourcetrail).
+2. Memahami arsitektur *cross-development* pada sistem operasi *embedded* Xinu yang memisahkan *Development-System VM* dan *Backend VM*.
+3. Mampu melakukan kompilasi *source code* Xinu dan menjalankannya pada *target machine* melalui jaringan (PXE/TFTP).
+4. Mampu mengakses dan mengeksplorasi perintah dasar *shell* Xinu menggunakan koneksi *serial port* (Minicom).
 
 ---
 
-## 2. Persiapan Tools
-Sebelum memulai praktikum, dilakukan pengecekan dan instalasi *tools* wajib yang akan digunakan selama praktikum Sistem Operasi, yaitu:
+## 2. Dasar Teori & Arsitektur Sistem
+Xinu OS adalah sistem operasi kecil yang dikhususkan untuk lingkungan *embedded*. Pengembangannya menggunakan paradigma **cross-development**, di mana programmer menggunakan komputer standar (*host/development-system*) untuk menulis dan mengompilasi kode, lalu mengunggah *image* OS tersebut ke komputer target (*backend*) untuk dijalankan.
 
-### 2.1 Oracle VM VirtualBox
-Virtualisasi yang digunakan untuk menjalankan sistem operasi tamu (Ubuntu dan Xinu).
-- **Status:** Terinstall
-- **Versi:** [Isi Versi VirtualBox Anda, misal: 6.1.x] *(Sesuai rekomendasi modul)*
-- **Link Download:** [virtualbox.org](https://www.virtualbox.org/wiki/Download_Old_Builds)
-
-### 2.2 Xinu OS
-Sistem operasi *embedded* yang akan dipelajari. File berformat `.ova` yang akan diimpor menjadi *Virtual Machine* pada modul selanjutnya.
-- **Status:** File `.ova` telah diunduh
-- **Lokasi File:** `C:/` (atau direktori yang ditentukan)
-- **Link Download:** [Xinu Book and Code](https://www.cs.purdue.edu/homes/comer/downloads/Xinu_Book_And_Code/VirtualBox/)
-
-### 2.3 Ubuntu
-Sistem operasi Linux yang dijalankan di dalam VirtualBox sebagai lingkungan pengembangan (*Development-System*).
-- **Status:** Terinstall dan dapat dijalankan di VirtualBox
-- **Password Lab PC:** `praktikan`
-
-### 2.4 Sourcetrail
-*Software cross-platform* untuk mengeksplorasi dan memahami *source code* C/C++ secara visual.
-- **Status:** Terinstall
-- **Link Download:** [Sourcetrail Releases](https://github.com/CoatiSoftware/Sourcetrail/releases)
+Pada praktikum ini, arsitektur yang digunakan terdiri dari dua *Virtual Machine* (VM):
+1. **Development-System VM:** Berisi OS Debian Linux, *source code* Xinu, *compiler*, DHCP Server, dan TFTP Server.
+2. **Backend VM:** Komputer target kosong yang akan melakukan *booting* melalui jaringan (PXE), mengambil *image* Xinu dari TFTP server, dan menjalankan Xinu OS.
+Kedua VM ini dihubungkan melalui *Virtual Serial Port* agar praktikan dapat memberikan perintah ke Xinu dari terminal Development-System.
 
 ---
 
-## 3. Langkah Kerja
-Berikut adalah langkah-langkah yang dilakukan selama praktikum Modul 1:
+## 3. Langkah Kerja dan Hasil Eksplorasi
 
-1. **Briefing Aturan Praktikum**
-   - Mendengarkan penjelasan asisten mengenai tata tertib laboratorium di Gedung TULT Lantai 6 & 7.
-   - Memahami sistem penilaian, kewajiban kehadiran minimal 75%, aturan keterlambatan (≤ 5 menit diperbolehkan, ≥ 30 menit tidak diperbolehkan), dan sanksi pelanggaran (misal: pengurangan nilai 20% jika lupa menghapus file).
-   - Memahami alur 16 modul praktikum, mulai dari Instalasi Xinu hingga Keamanan Linux.
+### 3.1 Login dan Kompilasi Source Code Xinu
+Langkah pertama dilakukan pada **Development-System VM**. VM dijalankan dan dilakukan *login* ke dalam sistem operasi Debian.
+- **Username:** `xinu`
+- **Password:** `xinurocks`
 
-2. **Pengecekan dan Instalasi VirtualBox**
-   - Memastikan Oracle VM VirtualBox sudah terinstal di komputer laboratorium/personal.
-   - Jika belum, melakukan unduh dan instalasi versi 6.1 sesuai panduan modul.
+Setelah masuk ke terminal, praktikan berpindah ke direktori kompilasi Xinu dan membersihkan *build* sebelumnya agar memastikan *image* yang dikompilasi adalah yang terbaru.
+```bash
+$ cd xinu/compile
+$ make clean
+$ make
+```
+**Hasil:** 
+Proses `make` akan mengompilasi seluruh *source code* C menjadi *image* bernama `xinu.elf`. Sistem juga secara otomatis menyalin *image* tersebut ke direktori server TFTP (`/srv/tftp/xinu.boot`) agar siap diunduh oleh *Backend VM*.
 
-3. **Persiapan File Xinu OS**
-   - Mengunduh file `xinu-vbox-appliances.tar.gz` atau file `.ova` dari link yang disediakan.
-   - Mengekstrak file tersebut dan memastikan file `development-system.ova` dan `backend.ova` tersedia.
+![Terminal Compile Xinu](assets/dummy.png)
+*Gambar 1: Proses kompilasi source code Xinu menggunakan perintah `make` pada Development-System VM.*
 
-4. **Pengecekan Ubuntu**
-   - Membuka aplikasi VirtualBox dan menjalankan *Virtual Machine* Ubuntu.
-   - Melakukan *login* menggunakan password `praktikan` untuk memastikan VM berjalan normal.
+### 3.2 Booting Backend VM via PXE
+Selanjutnya, **Backend VM** dijalankan. Karena Backend VM tidak memiliki hardisk yang berisi OS, ia akan melakukan *network booting*.
+1. Muncul tampilan **GRUB** bootloader.
+2. Backend VM meminta IP Address dari DHCP Server (yang berjalan di Development-System VM).
+3. Backend VM mengunduh file `xinu.boot` melalui protokol TFTP.
+4. Xinu OS berhasil dimuat ke memori dan berjalan.
 
-5. **Instalasi Sourcetrail**
-   - Mengunduh *installer* Sourcetrail.
-   - Melakukan instalasi dan membuka aplikasi untuk memastikan *software* dapat berjalan sebagai persiapan membaca *source code* Xinu di Modul 4.
+![Booting Backend VM](assets/dummy.png)
+*Gambar 2: Tampilan Backend VM saat melakukan booting melalui jaringan (PXE) dan memuat GRUB.*
+
+### 3.3 Koneksi Serial Port menggunakan Minicom
+Untuk berinteraksi dengan Xinu yang sedang berjalan di Backend VM, praktikan kembali ke terminal **Development-System VM** dan menjalankan aplikasi *serial communication* bernama `minicom`. Karena mengakses *hardware* secara langsung, perintah ini memerlukan hak akses *root*.
+```bash
+$ sudo minicom
+```
+*(Password: `xinurocks`)*
+
+**Hasil:** 
+Terminal Development-System kini terhubung langsung ke *console* Xinu di Backend VM. Prompt terminal berubah dari `xinu@xinu-develop-end:$` menjadi **`xsh$`**, yang menandakan bahwa praktikan kini berada di dalam *Xinu Shell*.
+
+![Koneksi Minicom](assets/dummy.png)
+*Gambar 3: Koneksi berhasil melalui Minicom, ditandai dengan munculnya prompt `xsh$`.*
+
+### 3.4 Eksplorasi Perintah Shell Xinu
+Pada prompt `xsh$`, praktikan dapat memberikan perintah langsung ke kernel Xinu. Perintah pada Xinu berbeda dengan Linux pada umumnya. Praktikan mencoba menjalankan perintah `help` untuk melihat daftar perintah yang didukung oleh *shell* Xinu.
+
+```bash
+xsh$ help
+```
+
+![Perintah Help Xinu](assets/dummy.png)
+*Gambar 4: Output dari perintah `help` yang menampilkan daftar command bawaan Xinu OS.*
+
+Selain itu, dilakukan eksplorasi direktori menggunakan perintah `ls` dan `cd` untuk melihat struktur sistem file sederhana yang dimiliki oleh Xinu, serta mencoba perintah `halt` atau `shutdown` untuk mematikan sistem.
 
 ---
 
-## 4. Hasil dan Pembahasan
+## 4. Pembahasan
+Berdasarkan praktikum yang telah dilakukan, terdapat beberapa poin penting terkait arsitektur dan cara kerja Xinu OS:
 
-### 4.1 Tampilan Oracle VM VirtualBox
-Berikut adalah tampilan awal Oracle VM VirtualBox Manager yang telah terinstal dengan baik. Terlihat daftar *Virtual Machine* (termasuk Ubuntu) yang siap digunakan.
-
-![Tampilan VirtualBox](assets/virtualbox_home.png)  
-*Gambar 1: Tampilan awal Oracle VM VirtualBox Manager.*
-
-### 4.2 Ketersediaan File Xinu OS
-File image Xinu (`.ova`) telah berhasil diunduh dan disimpan di direktori yang sesuai (misalnya drive `C:/`) sebagai persiapan untuk proses *Import Appliance* pada Modul 2.
-
-![File Xinu OS](assets/xinu_ova_file.png)  
-*Gambar 2: Tampilan direktori yang berisi file `development-system.ova` dan `backend.ova`.*
-
-### 4.3 Tampilan Ubuntu yang Berjalan
-Berikut adalah tangkapan layar saat *Virtual Machine* Ubuntu dijalankan di dalam VirtualBox. Proses *login* berhasil dilakukan menggunakan password `praktikan`, menandakan lingkungan pengembangan siap digunakan.
-
-![Tampilan Ubuntu](assets/ubuntu_running.png)  
-*Gambar 3: Tampilan desktop Ubuntu yang berjalan di dalam VirtualBox.*
-
-### 4.4 Verifikasi Instalasi Sourcetrail
-Berikut adalah tangkapan layar aplikasi Sourcetrail yang telah berhasil diinstal. *Software* ini akan digunakan untuk menavigasi dan memahami struktur *source code* Xinu yang kompleks pada modul selanjutnya.
-
-![Tampilan Sourcetrail](assets/sourcetrail_home.png)  
-*Gambar 4: Tampilan antarmuka Sourcetrail saat pertama kali dibuka.*
+1. **Pemisahan Host dan Target (Cross-Development):** 
+   Penggunaan dua VM sangat merepresentasikan kondisi dunia nyata pada pengembangan sistem *embedded* (seperti IoT atau *microcontroller*). Developer tidak mengompilasi kode di perangkat target yang sumber dayanya terbatas, melainkan di *host* (Development VM), lalu mentransfer *binary/image* hasilnya.
+2. **Mekanisme Network Booting (PXE & TFTP):**
+   Backend VM tidak membutuhkan media penyimpanan lokal. Saat dinyalakan, *Network Interface Card* (NIC) virtualnya mencari server DHCP. Development VM merespons dengan memberikan IP dan menunjuk ke server TFTP. Backend VM kemudian mengunduh `xinu.boot` dan mengeksekusinya langsung di RAM.
+3. **Peran Serial Port dan Minicom:**
+   Karena Backend VM berjalan tanpa antarmuka grafis (headless) dan fokus pada *embedded system*, interaksi *input/output* dilakukan melalui *serial port*. `minicom` bertindak sebagai *terminal emulator* yang menjembatani *keyboard* di Development VM ke *console* Xinu di Backend VM.
+4. **Xinu Shell (`xsh$`):**
+   Shell pada Xinu (`shell.c`) sangat minimalis. Ia memproses *input* string, mengekstrak nama perintah, dan memanggil *system call* atau fungsi internal kernel yang sesuai. Perintah seperti `help`, `uptime`, atau `kill` dieksekusi langsung di ruang kernel karena Xinu tidak memiliki pemisahan *user-space* dan *kernel-space* yang ketat seperti Linux modern.
 
 ---
 
 ## 5. Kesimpulan
-Berdasarkan praktikum Modul 1 ini, dapat disimpulkan bahwa:
-1. Praktikan telah memahami aturan main, sistem penilaian, tata tertib, dan sanksi yang berlaku di Laboratorium Informatika Universitas Telkom (Gedung TULT Lantai 6 & 7).
-2. Keempat *tools* utama praktikum, yaitu **Oracle VM VirtualBox**, **File Xinu OS (.ova)**, **Ubuntu**, dan **Sourcetrail**, telah berhasil diverifikasi keberadaannya dan berfungsi dengan baik.
-3. Kesiapan *tools* ini sangat penting sebagai fondasi untuk kelancaran praktikum pada Modul 2 (Instalasi Xinu) dan modul-modul selanjutnya yang berfokus pada eksplorasi kernel, proses, dan sinkronisasi.
-
----
+1. Praktikan telah memahami tata tertib laboratorium dan berhasil menyiapkan lingkungan *cross-development* menggunakan Oracle VM VirtualBox.
+2. Arsitektur Xinu OS membutuhkan dua mesin: **Development-System** (untuk kompilasi dan server TFTP/DHCP) dan **Backend** (sebagai target eksekusi *image* Xinu).
+3. Proses kompilasi `make` menghasilkan *image* yang berhasil di-*booting* oleh Backend VM melalui jaringan (PXE).
+4. Praktikan berhasil mengakses *Xinu Shell* (`xsh$`) melalui koneksi `minicom` dan mampu mengeksplorasi perintah-perintah dasar sistem operasi Xinu. Pemahaman ini menjadi fondasi penting untuk modul selanjutnya, yaitu pembacaan *source code*, manajemen proses, dan *system call*.
