@@ -1,111 +1,155 @@
 # Laporan Praktikum Sistem Operasi
+
 ## Modul 1, 2, dan 3: Instalasi, Arsitektur, dan Eksplorasi Xinu OS
 
 ### Identitas Praktikan
+
 | Item | Keterangan |
 |------|------------|
-| **Nama** | Nuevalen Refitra Alswando |
-| **NIM** | 103072430008 |
-| **Kelas** | IF-04-01 |
-| **Asisten Praktikum** | [Isi Nama Asisten Anda] |
-| **Tanggal Praktikum** | [Isi Tanggal Praktikum] |
+| **Nama** | |
+| **NIM** | |
+| **Kelas** | |
+| **Asisten Praktikum** | |
+| **Tanggal Praktikum** | |
 
 ---
 
 ## 1. Tujuan Praktikum
-1. Memahami aturan, tata tertib, dan persiapan *tools* utama praktikum Sistem Operasi (VirtualBox, Ubuntu, Xinu OS, dan Sourcetrail).
-2. Memahami arsitektur *cross-development* pada sistem operasi *embedded* Xinu yang memisahkan *Development-System VM* dan *Backend VM*.
-3. Mampu melakukan kompilasi *source code* Xinu dan menjalankannya pada *target machine* melalui jaringan (PXE/TFTP).
-4. Mampu mengakses dan mengeksplorasi perintah dasar *shell* Xinu menggunakan koneksi *serial port* (Minicom).
+
+1. Memahami ketentuan, tata tertib, dan persiapan *tools* yang digunakan pada praktikum Sistem Operasi, yaitu VirtualBox, Ubuntu, Xinu OS, dan Sourcetrail.
+2. Memahami arsitektur *cross-development* pada sistem operasi *embedded* Xinu yang membagi lingkungan kerja menjadi *Development-System VM* dan *Backend VM*.
+3. Mampu mengompilasi *source code* Xinu dan menjalankan hasilnya pada *target machine* melalui jaringan menggunakan PXE dan TFTP.
+4. Mampu mengakses serta mencoba perintah dasar *shell* Xinu melalui koneksi *serial port* dengan Minicom.
 
 ---
 
 ## 2. Dasar Teori & Arsitektur Sistem
-Xinu OS adalah sistem operasi kecil yang dikhususkan untuk lingkungan *embedded*. Pengembangannya menggunakan paradigma **cross-development**, di mana programmer menggunakan komputer standar (*host/development-system*) untuk menulis dan mengompilasi kode, lalu mengunggah *image* OS tersebut ke komputer target (*backend*) untuk dijalankan.
 
-Pada praktikum ini, arsitektur yang digunakan terdiri dari dua *Virtual Machine* (VM):
-1. **Development-System VM:** Berisi OS Debian Linux, *source code* Xinu, *compiler*, DHCP Server, dan TFTP Server.
-2. **Backend VM:** Komputer target kosong yang akan melakukan *booting* melalui jaringan (PXE), mengambil *image* Xinu dari TFTP server, dan menjalankan Xinu OS.
-Kedua VM ini dihubungkan melalui *Virtual Serial Port* agar praktikan dapat memberikan perintah ke Xinu dari terminal Development-System.
+Xinu OS merupakan sistem operasi berukuran kecil yang ditujukan untuk lingkungan *embedded*. Pengembangannya menerapkan pendekatan **cross-development**, yaitu penggunaan komputer pengembangan (*development-system*) untuk menulis dan mengompilasi kode. Hasil kompilasi berupa *image* sistem operasi kemudian dipindahkan ke komputer target (*backend*) untuk dijalankan.
+
+Arsitektur yang digunakan dalam praktikum ini terdiri dari dua *Virtual Machine* (VM):
+
+1. **Development-System VM:** Menjalankan Debian Linux dan menyediakan *source code* Xinu, *compiler*, DHCP Server, serta TFTP Server.
+2. **Backend VM:** Berperan sebagai komputer target yang melakukan *booting* melalui jaringan (PXE), mengambil *image* dari TFTP Server, kemudian menjalankan Xinu OS.
+
+Kedua VM juga dihubungkan melalui *Virtual Serial Port*. Koneksi ini memungkinkan praktikan mengirimkan perintah dan melihat keluaran Xinu melalui terminal pada Development-System VM.
 
 ---
 
 ## 3. Langkah Kerja dan Hasil Eksplorasi
 
 ### 3.1 Login dan Kompilasi Source Code Xinu
-Langkah pertama dilakukan pada **Development-System VM**. VM dijalankan dan dilakukan *login* ke dalam sistem operasi Debian.
+
+Praktikum diawali dengan menjalankan **Development-System VM** melalui Oracle VM VirtualBox 6.1 pada Windows. Setelah VM menyala, praktikan melakukan *login* ke sistem operasi Debian menggunakan akun berikut:
+
 - **Username:** `xinu`
 - **Password:** `xinurocks`
 
-Setelah masuk ke terminal, praktikan berpindah ke direktori kompilasi Xinu dan membersihkan *build* sebelumnya agar memastikan *image* yang dikompilasi adalah yang terbaru.
+Setelah masuk ke terminal, praktikan berpindah dari direktori *home* ke direktori kompilasi Xinu dengan perintah:
+
 ```bash
 $ cd xinu/compile
+```
+
+**Hasil:**
+Direktori kerja berpindah ke `~/xinu/compile`. Folder ini digunakan untuk menjalankan proses kompilasi Xinu.
+
+![Pindah ke Direktori Kompilasi Xinu](assets/dummy.png)
+
+*Gambar 1: Perpindahan ke direktori kompilasi Xinu menggunakan perintah `cd xinu/compile` pada Development-System VM.*
+
+Selanjutnya, hasil kompilasi sebelumnya dibersihkan agar proses *build* berikutnya menggunakan berkas sumber yang terbaru.
+
+```bash
 $ make clean
+```
+
+**Hasil:**
+Perintah `make clean` membersihkan berkas hasil kompilasi sebelumnya tanpa menghapus *source code* Xinu.
+
+![Membersihkan Hasil Kompilasi Xinu](assets/dummy.png)
+
+*Gambar 2: Pembersihan hasil kompilasi sebelumnya menggunakan perintah `make clean` pada Development-System VM.*
+
+Setelah proses pembersihan selesai, praktikan menjalankan kompilasi dengan perintah:
+
+```bash
 $ make
 ```
-**Hasil:** 
-Proses `make` akan mengompilasi seluruh *source code* C menjadi *image* bernama `xinu.elf`. Sistem juga secara otomatis menyalin *image* tersebut ke direktori server TFTP (`/srv/tftp/xinu.boot`) agar siap diunduh oleh *Backend VM*.
+
+**Hasil:**
+Perintah `make` membangun *image* Xinu bernama `xinu.elf` di dalam direktori `xinu/compile`. Hasil kompilasi juga disalin ke direktori TFTP sebagai `/srv/tftp/xinu.boot` agar dapat diambil oleh Backend VM saat melakukan *booting*.
 
 ![Terminal Compile Xinu](assets/dummy.png)
 
-*Gambar 1: Proses kompilasi source code Xinu menggunakan perintah `make` pada Development-System VM.*
+*Gambar 3: Proses kompilasi source code Xinu menggunakan perintah `make` pada Development-System VM.*
 
 ### 3.2 Booting Backend VM via PXE
-Selanjutnya, **Backend VM** dijalankan. Karena Backend VM tidak memiliki hardisk yang berisi OS, ia akan melakukan *network booting*.
-1. Muncul tampilan **GRUB** bootloader.
-2. Backend VM meminta IP Address dari DHCP Server (yang berjalan di Development-System VM).
-3. Backend VM mengunduh file `xinu.boot` melalui protokol TFTP.
-4. Xinu OS berhasil dimuat ke memori dan berjalan.
+
+Setelah kompilasi selesai dan Minicom disiapkan sebagaimana dijelaskan pada bagian 3.3, **Backend VM** dijalankan. Backend memperoleh sistem operasi melalui jaringan dengan mekanisme *network booting*. Tahapannya adalah sebagai berikut:
+
+1. Backend VM menjalankan PXE dan meminta alamat IP serta informasi berkas *boot* dari DHCP Server pada Development-System VM.
+2. Backend VM mengambil *bootloader* melalui TFTP, kemudian menampilkan tulisan **Welcome to GRUB!**.
+3. GRUB memuat *image* `xinu.boot` yang disediakan oleh TFTP Server.
+4. Xinu dimuat ke memori dan mulai berjalan pada Backend VM. Keberhasilannya diperiksa melalui sambutan Xinu dan prompt `xsh$` di Minicom.
 
 ![Booting Backend VM](assets/dummy.png)
 
-*Gambar 2: Tampilan Backend VM saat melakukan booting melalui jaringan (PXE) dan memuat GRUB.*
+*Gambar 4: Tampilan Backend VM saat melakukan booting melalui jaringan (PXE) dan memuat GRUB.*
 
 ### 3.3 Koneksi Serial Port menggunakan Minicom
-Untuk berinteraksi dengan Xinu yang sedang berjalan di Backend VM, praktikan kembali ke terminal **Development-System VM** dan menjalankan aplikasi *serial communication* bernama `minicom`. Karena mengakses *hardware* secara langsung, perintah ini memerlukan hak akses *root*.
+
+Komunikasi dengan Xinu pada Backend VM dilakukan melalui aplikasi `minicom` di **Development-System VM**. Minicom dibuka sebelum Backend VM dinyalakan agar keluaran saat Xinu mulai berjalan dapat langsung diamati. Perintah yang digunakan adalah:
+
 ```bash
 $ sudo minicom
 ```
+
 *(Password: `xinurocks`)*
 
-**Hasil:** 
-Terminal Development-System kini terhubung langsung ke *console* Xinu di Backend VM. Prompt terminal berubah dari `xinu@xinu-develop-end:$` menjadi **`xsh$`**, yang menandakan bahwa praktikan kini berada di dalam *Xinu Shell*.
+Perintah dijalankan menggunakan `sudo` agar Minicom memiliki izin yang diperlukan untuk mengakses perangkat serial.
+
+**Hasil:**
+Setelah Backend VM menjalankan Xinu, terminal Minicom menampilkan sambutan **Welcome to Xinu!** dan prompt **`xsh$`**. Tampilan tersebut menunjukkan bahwa praktikan sudah dapat berinteraksi dengan *Xinu Shell* melalui koneksi serial.
 
 ![Koneksi Minicom](assets/dummy.png)
 
-*Gambar 3: Koneksi berhasil melalui Minicom, ditandai dengan munculnya prompt `xsh$`.*
+*Gambar 5: Koneksi melalui Minicom yang menampilkan sambutan Xinu dan prompt `xsh$`.*
 
 ### 3.4 Eksplorasi Perintah Shell Xinu
-Pada prompt `xsh$`, praktikan dapat memberikan perintah langsung ke kernel Xinu. Perintah pada Xinu berbeda dengan Linux pada umumnya. Praktikan mencoba menjalankan perintah `help` untuk melihat daftar perintah yang didukung oleh *shell* Xinu.
 
-```bash
+Melalui prompt `xsh$`, praktikan dapat menjalankan perintah yang disediakan oleh *shell* Xinu. Daftar perintahnya tidak sepenuhnya sama dengan Linux. Untuk mengetahui perintah yang tersedia, praktikan menjalankan:
+
+```text
 xsh$ help
 ```
 
 ![Perintah Help Xinu](assets/dummy.png)
 
-*Gambar 4: Output dari perintah `help` yang menampilkan daftar command bawaan Xinu OS.*
+*Gambar 6: Hasil perintah `help` yang menampilkan daftar perintah bawaan pada shell Xinu.*
 
-Selain itu, dilakukan eksplorasi direktori menggunakan perintah `ls` dan `cd` untuk melihat struktur sistem file sederhana yang dimiliki oleh Xinu, serta mencoba perintah `halt` atau `shutdown` untuk mematikan sistem.
+Eksplorasi dilanjutkan dengan perintah `ps` untuk melihat informasi proses. Hasilnya menampilkan PID, nama proses, status, prioritas, PID induk, serta informasi stack. Pada saat pengamatan, proses `ps` berstatus `curr`, sedangkan proses lain memiliki status seperti `ready`, `wait`, dan `recv`.
 
 ---
 
 ## 4. Pembahasan
-Berdasarkan praktikum yang telah dilakukan, terdapat beberapa poin penting terkait arsitektur dan cara kerja Xinu OS:
 
-1. **Pemisahan Host dan Target (Cross-Development):** 
-   Penggunaan dua VM sangat merepresentasikan kondisi dunia nyata pada pengembangan sistem *embedded* (seperti IoT atau *microcontroller*). Developer tidak mengompilasi kode di perangkat target yang sumber dayanya terbatas, melainkan di *host* (Development VM), lalu mentransfer *binary/image* hasilnya.
+Berdasarkan kegiatan praktikum, beberapa hal yang dapat dipahami mengenai arsitektur dan cara kerja Xinu OS adalah sebagai berikut:
+
+1. **Pemisahan Host dan Target (Cross-Development):**
+   Penggunaan dua VM menggambarkan pengembangan sistem *embedded*, di mana pembuatan dan kompilasi kode dilakukan pada mesin pengembangan. Development-System VM menghasilkan *image* Xinu, sedangkan Backend VM menerima dan menjalankan *image* tersebut sebagai mesin target.
 2. **Mekanisme Network Booting (PXE & TFTP):**
-   Backend VM tidak membutuhkan media penyimpanan lokal. Saat dinyalakan, *Network Interface Card* (NIC) virtualnya mencari server DHCP. Development VM merespons dengan memberikan IP dan menunjuk ke server TFTP. Backend VM kemudian mengunduh `xinu.boot` dan mengeksekusinya langsung di RAM.
+   Backend VM memperoleh berkas untuk menjalankan Xinu melalui jaringan. DHCP Server memberikan alamat IP dan informasi *boot*, sedangkan TFTP Server menyediakan berkas yang diperlukan. Setelah *bootloader* memuat `xinu.boot` ke RAM, Backend VM mulai menjalankan Xinu.
 3. **Peran Serial Port dan Minicom:**
-   Karena Backend VM berjalan tanpa antarmuka grafis (headless) dan fokus pada *embedded system*, interaksi *input/output* dilakukan melalui *serial port*. `minicom` bertindak sebagai *terminal emulator* yang menjembatani *keyboard* di Development VM ke *console* Xinu di Backend VM.
+   Interaksi dengan Xinu dilakukan melalui koneksi serial virtual. Minicom berfungsi sebagai *terminal emulator* yang meneruskan masukan dari Development-System VM ke konsol Xinu, sekaligus menampilkan keluaran yang dikirimkan Backend VM.
 4. **Xinu Shell (`xsh$`):**
-   Shell pada Xinu (`shell.c`) sangat minimalis. Ia memproses *input* string, mengekstrak nama perintah, dan memanggil *system call* atau fungsi internal kernel yang sesuai. Perintah seperti `help`, `uptime`, atau `kill` dieksekusi langsung di ruang kernel karena Xinu tidak memiliki pemisahan *user-space* dan *kernel-space* yang ketat seperti Linux modern.
+   Shell Xinu menerima masukan berupa teks, mengenali nama perintah, kemudian menjalankan fungsi yang sesuai. Perintah `help` menampilkan daftar perintah yang tersedia, sedangkan `ps` memperlihatkan informasi proses. Perbedaan status pada hasil `ps` menunjukkan bahwa proses yang tercatat tidak semuanya sedang menggunakan CPU pada saat yang sama.
 
 ---
 
 ## 5. Kesimpulan
-1. Praktikan telah memahami tata tertib laboratorium dan berhasil menyiapkan lingkungan *cross-development* menggunakan Oracle VM VirtualBox.
-2. Arsitektur Xinu OS membutuhkan dua mesin: **Development-System** (untuk kompilasi dan server TFTP/DHCP) dan **Backend** (sebagai target eksekusi *image* Xinu).
-3. Proses kompilasi `make` menghasilkan *image* yang berhasil di-*booting* oleh Backend VM melalui jaringan (PXE).
-4. Praktikan berhasil mengakses *Xinu Shell* (`xsh$`) melalui koneksi `minicom` dan mampu mengeksplorasi perintah-perintah dasar sistem operasi Xinu. Pemahaman ini menjadi fondasi penting untuk modul selanjutnya, yaitu pembacaan *source code*, manajemen proses, dan *system call*.
+
+1. Praktikan telah mempelajari ketentuan praktikum dan menyiapkan lingkungan *cross-development* Xinu menggunakan Oracle VM VirtualBox.
+2. Lingkungan praktikum menggunakan dua VM dengan peran berbeda, yaitu **Development-System** sebagai tempat kompilasi serta penyedia layanan DHCP/TFTP, dan **Backend** sebagai target yang menjalankan Xinu.
+3. Perintah `cd xinu/compile`, `make clean`, dan `make` digunakan secara berurutan untuk masuk ke direktori kompilasi, membersihkan hasil *build* sebelumnya, serta menghasilkan *image* Xinu yang dimuat oleh Backend VM melalui jaringan.
+4. Praktikan berhasil mengakses *Xinu Shell* melalui Minicom dan mencoba perintah `help` serta `ps`. Kegiatan ini memberikan pemahaman awal untuk mempelajari *source code*, pengelolaan proses, dan *system call* pada modul berikutnya.
