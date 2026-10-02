@@ -9,7 +9,7 @@
 | **Nama** | I Made Diksatya Wilwadarma |
 | **NIM** | 108072500069 |
 | **Kelas** | IF-05-04 |
-| **Asisten Praktikum** | |
+| **Asisten Praktikum** | Neuvalen & Galang |
 | **Tanggal Praktikum** | 02 Oktober 2026 |
 
 ---
