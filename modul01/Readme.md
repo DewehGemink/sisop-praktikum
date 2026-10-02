@@ -1,4 +1,4 @@
-# Laporan Praktikum Jaringan Komputer - Modul 1
+# Laporan Praktikum Sistem Operasi - Modul 1
 ## Running Modul (Rules & Tools Setup)
 
 ### Identitas Praktikan
@@ -7,30 +7,42 @@
 | **Nama** | Nuevalen Refitra Alswando |
 | **NIM** | 103072430008 |
 | **Kelas** | IF-04-01 |
+| **Asisten Praktikum** | [Isi Nama Asisten Anda] |
+| **Tanggal Praktikum** | [Isi Tanggal Praktikum, misal: 12 September 2025] |
 
 ---
 
 ## 1. Tujuan Praktikum
-Berdasarkan modul praktikum Jaringan Komputer Semester Genap 2025/2026, tujuan dari Modul 1 adalah:
-1. Mahasiswa mengetahui aturan dan sistem pelaksanaan praktikum.
-2. Mahasiswa mengetahui tools yang akan digunakan dan memastikan tools berfungsi dengan baik selama pelaksanaan praktikum.
+Berdasarkan modul praktikum Sistem Operasi Semester Ganjil 2025/2026, tujuan dari Modul 1 adalah:
+1. Praktikan mengetahui aturan, sistem pelaksanaan, sistem penilaian, dan sanksi pelanggaran selama praktikum di Laboratorium Informatika.
+2. Praktikan mengetahui *tools* yang akan digunakan selama 16 pertemuan dan memastikan *tools* tersebut telah terinstal serta berfungsi dengan baik untuk mengurangi kendala teknis.
 
 ---
 
 ## 2. Persiapan Tools
-Sebelum memulai praktikum, dilakukan pengecekan dan instalasi tools yang wajib digunakan selama 16 pertemuan ke depan.
+Sebelum memulai praktikum, dilakukan pengecekan dan instalasi *tools* wajib yang akan digunakan selama praktikum Sistem Operasi, yaitu:
 
-### 2.1 Wireshark
-Wireshark adalah aplikasi packet sniffer yang digunakan untuk menganalisis protokol jaringan.
+### 2.1 Oracle VM VirtualBox
+Virtualisasi yang digunakan untuk menjalankan sistem operasi tamu (Ubuntu dan Xinu).
 - **Status:** Terinstall
-- **Versi:** [Isi Versi Wireshark Anda, misal: 4.0.3]
-- **Link Download:** [www.wireshark.org](http://www.wireshark.org/)
+- **Versi:** [Isi Versi VirtualBox Anda, misal: 6.1.x] *(Sesuai rekomendasi modul)*
+- **Link Download:** [virtualbox.org](https://www.virtualbox.org/wiki/Download_Old_Builds)
 
-### 2.2 Python
-Python digunakan untuk modul Socket Programming.
+### 2.2 Xinu OS
+Sistem operasi *embedded* yang akan dipelajari. File berformat `.ova` yang akan diimpor menjadi *Virtual Machine* pada modul selanjutnya.
+- **Status:** File `.ova` telah diunduh
+- **Lokasi File:** `C:/` (atau direktori yang ditentukan)
+- **Link Download:** [Xinu Book and Code](https://www.cs.purdue.edu/homes/comer/downloads/Xinu_Book_And_Code/VirtualBox/)
+
+### 2.3 Ubuntu
+Sistem operasi Linux yang dijalankan di dalam VirtualBox sebagai lingkungan pengembangan (*Development-System*).
+- **Status:** Terinstall dan dapat dijalankan di VirtualBox
+- **Password Lab PC:** `praktikan`
+
+### 2.4 Sourcetrail
+*Software cross-platform* untuk mengeksplorasi dan memahami *source code* C/C++ secara visual.
 - **Status:** Terinstall
-- **Versi:** [Isi Versi Python Anda, misal: 3.11.0]
-- **Link Download:** [www.python.org](https://www.python.org/downloads/)
+- **Link Download:** [Sourcetrail Releases](https://github.com/CoatiSoftware/Sourcetrail/releases)
 
 ---
 
@@ -38,59 +50,60 @@ Python digunakan untuk modul Socket Programming.
 Berikut adalah langkah-langkah yang dilakukan selama praktikum Modul 1:
 
 1. **Briefing Aturan Praktikum**
-   - Mendengarkan penjelasan asisten mengenai tata tertib laboratorium (TULT Lantai 6 & 7).
-   - Memahami sistem penilaian, kehadiran (minimal 75%), dan sanksi pelanggaran.
-   - Memahami alur 16 modul praktikum hingga Tugas Besar.
+   - Mendengarkan penjelasan asisten mengenai tata tertib laboratorium di Gedung TULT Lantai 6 & 7.
+   - Memahami sistem penilaian, kewajiban kehadiran minimal 75%, aturan keterlambatan (≤ 5 menit diperbolehkan, ≥ 30 menit tidak diperbolehkan), dan sanksi pelanggaran (misal: pengurangan nilai 20% jika lupa menghapus file).
+   - Memahami alur 16 modul praktikum, mulai dari Instalasi Xinu hingga Keamanan Linux.
 
-2. **Pengecekan Tools**
-   - Memastikan Wireshark dan Python sudah terinstall di komputer laboratorium/personal.
-   - Melakukan update jika diperlukan.
+2. **Pengecekan dan Instalasi VirtualBox**
+   - Memastikan Oracle VM VirtualBox sudah terinstal di komputer laboratorium/personal.
+   - Jika belum, melakukan unduh dan instalasi versi 6.1 sesuai panduan modul.
 
-3. **Test Run Wireshark**
-   - Mengunduh file `soal1.pcap` dari LMS kelas praktikum.
-   - Membuka aplikasi Wireshark.
-   - Melakukan open file `soal1.pcap` melalui menu `File > Open`.
-   - Mengamati fitur dasar Wireshark (Packet List, Packet Details, Packet Bytes).
+3. **Persiapan File Xinu OS**
+   - Mengunduh file `xinu-vbox-appliances.tar.gz` atau file `.ova` dari link yang disediakan.
+   - Mengekstrak file tersebut dan memastikan file `development-system.ova` dan `backend.ova` tersedia.
+
+4. **Pengecekan Ubuntu**
+   - Membuka aplikasi VirtualBox dan menjalankan *Virtual Machine* Ubuntu.
+   - Melakukan *login* menggunakan password `praktikan` untuk memastikan VM berjalan normal.
+
+5. **Instalasi Sourcetrail**
+   - Mengunduh *installer* Sourcetrail.
+   - Melakukan instalasi dan membuka aplikasi untuk memastikan *software* dapat berjalan sebagai persiapan membaca *source code* Xinu di Modul 4.
 
 ---
 
 ## 4. Hasil dan Pembahasan
 
-### 4.1 Tampilan Awal Wireshark
-Berikut adalah tampilan awal Wireshark sebelum membuka file trace. Terlihat daftar interface jaringan yang tersedia.
+### 4.1 Tampilan Oracle VM VirtualBox
+Berikut adalah tampilan awal Oracle VM VirtualBox Manager yang telah terinstal dengan baik. Terlihat daftar *Virtual Machine* (termasuk Ubuntu) yang siap digunakan.
 
-![Tampilan Awal Wireshark](assets/wireshark_home.png)
-*Gambar 1: Tampilan awal Wireshark saat pertama kali dibuka.*
+![Tampilan VirtualBox](assets/virtualbox_home.png)  
+*Gambar 1: Tampilan awal Oracle VM VirtualBox Manager.*
 
-### 4.2 Membuka File soal1.pcap
-File `soal1.pcap` berhasil dibuka. Berikut adalah tangkapan layar saat file trace dimuat ke dalam Wireshark.
+### 4.2 Ketersediaan File Xinu OS
+File image Xinu (`.ova`) telah berhasil diunduh dan disimpan di direktori yang sesuai (misalnya drive `C:/`) sebagai persiapan untuk proses *Import Appliance* pada Modul 2.
 
-![Membuka soal1.pcap](images/wireshark_soal1.png)
-*Gambar 2: Tampilan Wireshark setelah membuka file soal1.pcap dari LMS.*
+![File Xinu OS](assets/xinu_ova_file.png)  
+*Gambar 2: Tampilan direktori yang berisi file `development-system.ova` dan `backend.ova`.*
 
-### 4.3 Analisis Singkat Paket
-Pada file `soal1.pcap`, dapat dilihat beberapa protokol yang tertangkap. Berikut adalah detail salah satu paket yang dipilih (misalnya paket HTTP atau TCP pertama).
+### 4.3 Tampilan Ubuntu yang Berjalan
+Berikut adalah tangkapan layar saat *Virtual Machine* Ubuntu dijalankan di dalam VirtualBox. Proses *login* berhasil dilakukan menggunakan password `praktikan`, menandakan lingkungan pengembangan siap digunakan.
 
-![Detail Paket](images/wireshark_detail.png)
-*Gambar 3: Detail paket pada jendela Packet Details.*
+![Tampilan Ubuntu](assets/ubuntu_running.png)  
+*Gambar 3: Tampilan desktop Ubuntu yang berjalan di dalam VirtualBox.*
 
-### 4.4 Verifikasi Python
-Berikut adalah tangkapan layar Command Prompt/Terminal saat mengecek versi Python untuk memastikan tools siap digunakan pada modul selanjutnya (Modul 7 & 9).
+### 4.4 Verifikasi Instalasi Sourcetrail
+Berikut adalah tangkapan layar aplikasi Sourcetrail yang telah berhasil diinstal. *Software* ini akan digunakan untuk menavigasi dan memahami struktur *source code* Xinu yang kompleks pada modul selanjutnya.
 
-![Cek Python](assets/python_version.png)
-*Gambar 4: Verifikasi instalasi Python melalui command line.*
+![Tampilan Sourcetrail](assets/sourcetrail_home.png)  
+*Gambar 4: Tampilan antarmuka Sourcetrail saat pertama kali dibuka.*
 
 ---
 
 ## 5. Kesimpulan
 Berdasarkan praktikum Modul 1 ini, dapat disimpulkan bahwa:
-1. Praktikan telah memahami aturan main, sistem penilaian, dan sanksi yang berlaku di Laboratorium Informatika Universitas Telkom.
-2. Tools utama yaitu **Wireshark** dan **Python** telah berhasil diinstall dan berfungsi dengan baik.
-3. Praktikan mampu membuka file trace (`.pcap`) dan memahami antarmuka dasar Wireshark yang akan digunakan pada modul-modul selanjutnya (HTTP, DNS, TCP, dll).
-4. Kesiapan tools ini sangat penting untuk kelancaran praktikum hingga penyusunan Tugas Besar.
+1. Praktikan telah memahami aturan main, sistem penilaian, tata tertib, dan sanksi yang berlaku di Laboratorium Informatika Universitas Telkom (Gedung TULT Lantai 6 & 7).
+2. Keempat *tools* utama praktikum, yaitu **Oracle VM VirtualBox**, **File Xinu OS (.ova)**, **Ubuntu**, dan **Sourcetrail**, telah berhasil diverifikasi keberadaannya dan berfungsi dengan baik.
+3. Kesiapan *tools* ini sangat penting sebagai fondasi untuk kelancaran praktikum pada Modul 2 (Instalasi Xinu) dan modul-modul selanjutnya yang berfokus pada eksplorasi kernel, proses, dan sinkronisasi.
 
 ---
-
-## 6. Lampiran
-- File `soal1.pcap` (Jika diizinkan untuk dilampirkan).
-- Dokumentasi foto saat praktikum (Opsional).
